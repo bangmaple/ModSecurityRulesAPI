@@ -15,7 +15,7 @@ public class ModSecRulesWS {
 
     @Inject
     private ModSecRulesDAO dao;
-    
+
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,7 +33,12 @@ public class ModSecRulesWS {
             @FormDataParam("description") String desc) throws IOException {
         Rules rule = buildRuleEntity(desc, name, ruleFile);
         dao.insertRule(rule);
-        return Response.ok().build();
+        return Response.ok().header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Headers",
+                        "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Methods",
+                        "GET, POST, PUT, DELETE, OPTIONS, HEAD").build();
     }
 
     @GET
@@ -41,15 +46,15 @@ public class ModSecRulesWS {
     public Response getRulesBrief() {
         return Response.ok().entity(dao.getBriefRules()).build();
     }
-    
+
     private Rules buildRuleEntity(String desc, String name, InputStream ruleFile) throws IOException {
-                Rules modSecRule = new Rules();
+        Rules modSecRule = new Rules();
         modSecRule.setRuleDescription(desc);
         modSecRule.setRuleName(name);
         modSecRule.setRuleFile(getByteDataFromInpuStream(ruleFile));
         return modSecRule;
     }
-    
+
     private static byte[] getByteDataFromInpuStream(InputStream is) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;

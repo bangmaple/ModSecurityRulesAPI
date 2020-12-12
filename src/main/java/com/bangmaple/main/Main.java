@@ -1,14 +1,15 @@
 package com.bangmaple.main;
 
 import com.bangmaple.daos.ModSecRulesDAO;
+import com.bangmaple.filters.CORSFilter;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import javax.inject.Singleton;
 import java.net.URI;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 public class Main {
     public static final String BASE_URI = "http://localhost:8080/api/";
@@ -18,6 +19,7 @@ public class Main {
                 .packages("com.bangmaple.ws")
                 .register(JacksonFeature.class)
                 .register(MultiPartFeature.class)
+                .register(new CORSFilter())
                 .register(new AbstractBinder() {
             @Override
             protected void configure() {
